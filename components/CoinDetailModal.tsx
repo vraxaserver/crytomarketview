@@ -55,9 +55,6 @@ export default function CoinDetailModal({ coin, isOpen, onClose }: CoinDetailMod
               <p className="text-sm text-gray-500 dark:text-gray-400 uppercase">{coin.symbol}</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={onClose} className="p-2">
-            <X className="h-5 w-5" />
-          </Button>
         </div>
 
         <div className="p-6 space-y-6">
@@ -147,7 +144,11 @@ export default function CoinDetailModal({ coin, isOpen, onClose }: CoinDetailMod
               <Star className="h-4 w-4 mr-2" />
               Add to Watchlist
             </Button>
-            <Button variant="outline" className="flex-1">
+            <Button 
+              variant="outline" 
+              className="flex-1"
+              onClick={() => window.open(`https://www.coingecko.com/en/coins/${coin.id}`, '_blank')}
+            >
               <ExternalLink className="h-4 w-4 mr-2" />
               View on CoinGecko
             </Button>
