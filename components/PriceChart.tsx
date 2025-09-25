@@ -34,7 +34,7 @@ export default function PriceChart({ data, loading, timeframe }: PriceChartProps
   const formatXAxisLabel = (timestamp: number) => {
     const date = new Date(timestamp)
     if (timeframe === 1) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' })
     } else if (timeframe <= 30) {
       return date.toLocaleDateString([], { month: 'short', day: 'numeric' })
     } else {
@@ -71,7 +71,7 @@ export default function PriceChart({ data, loading, timeframe }: PriceChartProps
               return (
                 <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600">
                   <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {new Date(label).toLocaleString()}
+                    {new Date(label).toLocaleDateString()}
                   </p>
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
                     Price: {formatPrice(payload[0].value as number)}
