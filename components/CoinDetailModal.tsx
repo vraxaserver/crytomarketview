@@ -2,9 +2,8 @@
 
 import { useState } from 'react'
 import { X, ExternalLink, Star, Share2 } from 'lucide-react'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { CryptoCurrency, useGetCoinChartQuery } from '@/lib/services/cryptoApi'
 import PriceChart from './PriceChart'
 
@@ -41,43 +40,50 @@ export default function CoinDetailModal({ coin, isOpen, onClose }: CoinDetailMod
   const formatPrice = (price: number) => {
     if (price < 0.01) return `$${price.toFixed(6)}`
     if (price < 1) return `$${price.toFixed(4)}`
-    return `$${price.toFixed(2)}`
+    return `$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 p-0">
-        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-slate-800 border-slate-700 p-0 text-white">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-slate-700">
           <div className="flex items-center space-x-3">
-            <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" />
+            <img src={coin.image} alt={coin.name} className="w-10 h-10 rounded-full" />
             <div>
-              <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">{coin.name}</DialogTitle>
-              <p className="text-sm text-gray-500 dark:text-gray-400 uppercase">{coin.symbol}</p>
+              <h2 className="text-xl font-semibold text-white">{coin.name}</h2>
+              <p className="text-sm text-slate-400 uppercase">{coin.symbol}</p>
             </div>
           </div>
+          <button
+            onClick={onClose}
+            className="text-slate-400 hover:text-white transition-colors p-1"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-8">
           {/* Price Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Current Price</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">
+          <div className="grid grid-cols-3 gap-6">
+            <div className="bg-slate-700/50 rounded-lg p-4">
+              <p className="text-sm text-slate-400 mb-2">Current Price</p>
+              <p className="text-2xl font-bold text-white">
                 {formatPrice(coin.current_price)}
               </p>
             </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">24h Change</p>
+            <div className="bg-slate-700/50 rounded-lg p-4">
+              <p className="text-sm text-slate-400 mb-2">24h Change</p>
               <p className={`text-2xl font-bold ${
-                coin.price_change_percentage_24h >= 0 ? 'text-green-500' : 'text-red-500'
+                coin.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'
               }`}>
                 {coin.price_change_percentage_24h >= 0 ? '+' : ''}
                 {coin.price_change_percentage_24h?.toFixed(2) || '0.00'}%
               </p>
             </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Market Cap</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-slate-700/50 rounded-lg p-4">
+              <p className="text-sm text-slate-400 mb-2">Market Cap</p>
+              <p className="text-2xl font-bold text-white">
                 {formatNumber(coin.market_cap)}
               </p>
             </div>
@@ -85,23 +91,25 @@ export default function CoinDetailModal({ coin, isOpen, onClose }: CoinDetailMod
 
           {/* Chart Section */}
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Price Chart</h3>
-              <div className="flex space-x-1">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold text-white">Price Chart</h3>
+              <div className="flex bg-slate-700/50 rounded-lg p-1">
                 {timeframes.map(({ label, days }) => (
-                  <Button
+                  <button
                     key={days}
-                    variant={selectedTimeframe === days ? 'default' : 'outline'}
-                    size="sm"
                     onClick={() => setSelectedTimeframe(days)}
-                    className="px-3 py-1 text-xs"
+                    className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                      selectedTimeframe === days
+                        ? 'bg-slate-600 text-white'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
                   >
                     {label}
-                  </Button>
+                  </button>
                 ))}
               </div>
             </div>
-            <div className="h-80 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div className="h-80 bg-slate-700/30 rounded-lg">
               <PriceChart 
                 data={chartData?.prices || []} 
                 loading={chartLoading}
@@ -111,48 +119,51 @@ export default function CoinDetailModal({ coin, isOpen, onClose }: CoinDetailMod
           </div>
 
           {/* Additional Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Rank</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
+          <div className="grid grid-cols-4 gap-4">
+            <div className="bg-slate-700/50 rounded-lg p-4 text-center">
+              <p className="text-sm text-slate-400 mb-2">Rank</p>
+              <p className="text-xl font-bold text-white">
                 #{coin.market_cap_rank}
               </p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Volume 24h</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-slate-700/50 rounded-lg p-4 text-center">
+              <p className="text-sm text-slate-400 mb-2">Volume 24h</p>
+              <p className="text-xl font-bold text-white">
                 {formatNumber(coin.total_volume)}
               </p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">High 24h</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-slate-700/50 rounded-lg p-4 text-center">
+              <p className="text-sm text-slate-400 mb-2">High 24h</p>
+              <p className="text-xl font-bold text-white">
                 {formatPrice(coin.high_24h)}
               </p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Low 24h</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-slate-700/50 rounded-lg p-4 text-center">
+              <p className="text-sm text-slate-400 mb-2">Low 24h</p>
+              <p className="text-xl font-bold text-white">
                 {formatPrice(coin.low_24h)}
               </p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-            <Button className="flex-1 bg-gray-900 hover:bg-gray-800 text-white dark:bg-gray-700 dark:hover:bg-gray-600">
+          <div className="grid grid-cols-3 gap-4">
+            <Button className="bg-white text-slate-800 hover:bg-slate-100 font-medium py-3">
               <Star className="h-4 w-4 mr-2" />
               Add to Watchlist
             </Button>
             <Button 
               variant="outline" 
-              className="flex-1"
+              className="border-slate-600 text-white hover:bg-slate-700 font-medium py-3"
               onClick={() => window.open(`https://www.coingecko.com/en/coins/${coin.id}`, '_blank')}
             >
               <ExternalLink className="h-4 w-4 mr-2" />
               View on CoinGecko
             </Button>
-            <Button variant="outline" className="flex-1">
+            <Button 
+              variant="outline" 
+              className="border-slate-600 text-white hover:bg-slate-700 font-medium py-3"
+            >
               <Share2 className="h-4 w-4 mr-2" />
               Share
             </Button>
