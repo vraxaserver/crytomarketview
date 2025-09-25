@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { X, ExternalLink, Star, Share2 } from 'lucide-react'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { CryptoCurrency, useGetCoinChartQuery } from '@/lib/services/cryptoApi'
 import PriceChart from './PriceChart'
@@ -51,8 +51,8 @@ export default function CoinDetailModal({ coin, isOpen, onClose }: CoinDetailMod
           <div className="flex items-center space-x-3">
             <img src={coin.image} alt={coin.name} className="w-10 h-10 rounded-full" />
             <div>
-              <h2 className="text-xl font-semibold text-white">{coin.name}</h2>
-              <p className="text-sm text-slate-400 uppercase">{coin.symbol}</p>
+              <DialogTitle className="text-lg font-semibold text-white">{coin.name}</DialogTitle>
+              <DialogDescription className="text-xs text-slate-400 uppercase font-medium">{coin.symbol}</DialogDescription>
             </div>
           </div>
           <button
