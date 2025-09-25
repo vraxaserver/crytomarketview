@@ -53,7 +53,7 @@ export default function CoinDetailModal({ coin, isOpen, onClose }: CoinDetailMod
           : 'bg-white border-gray-200 text-gray-900'
       }`}>
         {/* Header */}
-        <div className={`flex items-center justify-between p-6 border-b ${
+        <div className={`flex items-center p-6 border-b ${
           isDark ? 'border-slate-700' : 'border-gray-200'
         }`}>
           <div className="flex items-center space-x-3">
@@ -71,16 +71,6 @@ export default function CoinDetailModal({ coin, isOpen, onClose }: CoinDetailMod
               </DialogDescription>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className={`p-2 rounded-lg transition-colors ${
-              isDark 
-                ? 'text-slate-400 hover:text-white hover:bg-slate-700' 
-                : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            <X className="h-5 w-5" />
-          </button>
         </div>
 
         <div className="p-6 space-y-8">
